@@ -54,62 +54,65 @@ model.compile(
     metrics=["accuracy"],
 )
 
-# 训练模型
-batch_size = 128
-epochs = 10
-model.fit(
-    x_train,
-    y_train,
-    batch_size=batch_size,
-    epochs=epochs,
-    verbose=1,
-    validation_data=(x_test, y_test),
-)
 
-# 评估模型
-score = model.evaluate(x_test, y_test, verbose=0)
-print("Test loss:", score[0])
-print("Test accuracy:", score[1])
-
-
-# 预测概率
-y_score = model.predict(x_test)
-
-# 计算ROC曲线和AUC值
-fpr = dict()
-tpr = dict()
-roc_auc = dict()
-for i in range(num_classes):
-    fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
-    roc_auc[i] = auc(fpr[i], tpr[i])
-
-# 绘制ROC曲线
-plt.figure()
-colors = [
-    "aqua",
-    "darkorange",
-    "cornflowerblue",
-    "green",
-    "red",
-    "purple",
-    "pink",
-    "gray",
-    "brown",
-    "olive",
-]
-for i, color in zip(range(num_classes), colors):
-    plt.plot(
-        fpr[i],
-        tpr[i],
-        color=color,
-        lw=2,
-        label="ROC curve of class {0} (area = {1:0.2f})".format(i, roc_auc[i]),
+def draw_roc(model, num_hidden):
+    # 训练模型
+    batch_size = 128
+    epochs = 10
+    model.fit(
+        x_train,
+        y_train,
+        batch_size=batch_size,
+        epochs=epochs,
+        verbose=1,
+        validation_data=(x_test, y_test),
     )
-plt.plot([0, 1], [0, 1], "k--", lw=2)
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel("False Positive Rate")
-plt.ylabel("True Positive Rate")
-plt.title("Receiver operating characteristic for multi-class, 32 hidden layers ")
-plt.legend(loc="lower right")
-plt.show()
+
+    # 评估模型
+    score = model.evaluate(x_test, y_test, verbose=0)
+    print("Test loss:", score[0])
+    print("Test accuracy:", score[1])
+
+    # 预测概率
+    y_score = model.predict(x_test)
+
+    # 计算ROC曲线和AUC值
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    for i in range(num_classes):
+        fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+
+    # 绘制ROC曲线
+    plt.figure()
+    colors = [
+        "aqua",
+        "darkorange",
+        "cornflowerblue",
+        "green",
+        "red",
+        "purple",
+        "pink",
+        "gray",
+        "brown",
+        "olive",
+    ]
+    for i, color in zip(range(num_classes), colors):
+        plt.plot(
+            fpr[i],
+            tpr[i],
+            color=color,
+            lw=2,
+            label="ROC curve of class {0} (area = {1:0.2f})".format(i, roc_auc[i]),
+        )
+    plt.plot([0, 1], [0, 1], "k--", lw=2)
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title(
+        f"Receiver operating characteristic for multi-class, {num_hidden} hidden layers "
+    )
+    plt.legend(loc="lower right")
+    plt.show()
