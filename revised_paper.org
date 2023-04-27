@@ -35,14 +35,26 @@ MNIST数据集已经成为了机器学习领域中一个重要的基准数据集
 
 ** References
 [1] Russell, S., & Norvig, P. (2016). Artificial Intelligence: A Modern Approach, Global Edition.
+
 [2] Kelleher, J. D. (2019). Deep Learning. MIT Press.
-[7] Y. LeCun et al., "Handwritten digit recognition with a backpropagation network," in Advances in neural information  processing systems, 1990, pp. 396-404.  
-[9] R. Hecht-Nielsen, "Theory of the backpropagation neural  network," in Neural networks for perception: Elsevier, 1992, pp.  65-93.  
+
+[7] Y. LeCun et al., "Handwritten digit recognition with a backpropagation network," in Advances in neural information  processing systems, 1990, pp. 396-404.
+
+[9] R. Hecht-Nielsen, "Theory of the backpropagation neural  network," in Neural networks for perception: Elsevier, 1992, pp.  65-93.
+
 [3]李斯凡,高法钦.基于卷积神经网络的手写数字识别[J].浙江理工大学学报(自然科学版),2017,37(03):438-443.
+
 [4] Ravi Babu U, Venkateswarlu Y, Chintha A K. Handwritten Digit Recognition Using K-Nearest Neighbour Classifier[J]. International Journal of Computer Science and Mobile Computing, 2014, 3(5): 100-107.
+
 [5] Rashnodi, O., Sajedi, H., & Saniee, M. (2011). Persian Handwritten Digit Recognition using Support Vector Machines. International Journal of Computer Applications, 29(12), 1-6.
-[27]  E. Kussul and T. Baidyk, "Improved method of handwritten digit  recognition tested on MNIST database," Image and Vision  Computing, vol. 22, no. 12, pp. 971-981, 2004.  
-[24]  Y. LeCun, "The MNIST database of handwritten digits,"  http://yann.lecun.com/exdb/mnist/, 1998.  
-[13] K. B. Lee, S. Cheon, and C. O. Kim, "A convolutional neural  network for fault classification and diagnosis in semiconductor  manufacturing processes," IEEE Transactions on Semiconductor  Manufacturing, vol. 30, no. 2, pp. 135-142, 2017.  
-[6]  A. Krizhevsky, I. Sutskever, and G. E. Hinton, "Imagenet  classification with deep convolutional neural networks," in  Advances in 
+
+[27]  E. Kussul and T. Baidyk, "Improved method of handwritten digit  recognition tested on MNIST database," Image and Vision  Computing, vol. 22, no. 12, pp. 971-981, 2004.
+
+[24]  Y. LeCun, "The MNIST database of handwritten digits,"  http://yann.lecun.com/exdb/mnist/, 1998.
+
+[13] K. B. Lee, S. Cheon, and C. O. Kim, "A convolutional neural  network for fault classification and diagnosis in semiconductor  manufacturing processes," IEEE Transactions on Semiconductor  Manufacturing, vol. 30, no. 2, pp. 135-142, 2017.
+
+[6]  A. Krizhevsky, I. Sutskever, and G. E. Hinton, "Imagenet  classification with deep convolutional neural networks," in  Advances in
+
 [8] Simonyan, Karen, and Andrew Zisserman. "Very deep convolutional networks for large-scale image recognition." arXiv preprint arXiv:1409.1556 (2014).
+
