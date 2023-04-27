@@ -1,0 +1,12 @@
+kernel size: 3, num_hidden:16召回率: 0.8824764605853008
+kernel size: 3, num_hidden:32召回率: 0.9013052704323025
+kernel size: 3, num_hidden:64召回率: 0.9160670793928357
+kernel size: 3, num_hidden:128召回率: 0.9236459289400518
+kernel size: 4, num_hidden:16召回率: 0.8839235599730054
+kernel size: 4, num_hidden:32召回率: 0.9068894926046476
+kernel size: 4, num_hidden:64召回率: 0.9160309751150567
+kernel size: 4, num_hidden:128召回率: 0.9266845550881797
+
+kernel size: 3, num_hidden:64召回率: 0.9153502201891746
+kernel size: 4, num_hidden:64召回率: 0.9183184086576249
+kernel size: 4, num_hidden:64召回率: 0.9925328435058102kernel size: 4, num_hidden:64召回率: 0.9915202627534392

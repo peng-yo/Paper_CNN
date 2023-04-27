@@ -1,16 +1,13 @@
 from threading import main_thread
-from tensorflow import keras
-from keras.utils import np_utils
+
 import numpy as np
-
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
-
-
-from sklearn.metrics import roc_curve, auc, recall_score
+from keras.datasets import mnist
+from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
+from keras.models import Sequential
+from keras.utils import np_utils
+from sklearn.metrics import auc, recall_score, roc_curve
+from tensorflow import keras
 
 num_classes = 10
 TOTAL_TEST_ACC = []
@@ -45,12 +42,17 @@ y_test = np_utils.to_categorical(y_test, 10)
 #     return model
 
 
-def cnn_model(num_hidden):
+def cnn_model(num_hidden, kernel_size):
     model = Sequential()
     model.add(
-        Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=(28, 28, 1))
+        Conv2D(
+            32,
+            kernel_size=(kernel_size, kernel_size),
+            activation="relu",
+            input_shape=(28, 28, 1),
+        )
     )
-    model.add(Conv2D(num_hidden, (3, 3), activation="relu"))
+    model.add(Conv2D(num_hidden, (kernel_size, kernel_size), activation="relu"))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
     model.add(Flatten())
@@ -68,116 +70,135 @@ def draw_each():
     sns.set_palette("dark")
 
     num_hidden_list = [16, 32, 64, 128]
-
-    for num_hidden in num_hidden_list:
-        print("Number of hidden neurons:", num_hidden)
-        model = cnn_model(num_hidden)
-        model.compile(
-            loss=keras.losses.categorical_crossentropy,
-            optimizer=keras.optimizers.legacy.Adadelta(),
-            metrics=["accuracy"],
-        )
-        history = model.fit(
-            x_train, y_train, epochs=3, batch_size=32, validation_data=(x_test, y_test)
-        )
-        # acc_list = [0 for i in range(10)]
-        acc_list = []
-        for i in range(10):
-            model.fit(
+    # num_hidden_list = [64, 128]
+    for kernel_size in [3, 5]:
+        for num_hidden in num_hidden_list:
+            print("Number of hidden neurons:", num_hidden)
+            model = cnn_model(num_hidden, kernel_size)
+            model.compile(
+                loss=keras.losses.categorical_crossentropy,
+                # optimizer=keras.optimizers.legacy.Adadelta(),
+                optimizer=keras.optimizers.Adam(),
+                metrics=["accuracy"],
+            )
+            history = model.fit(
                 x_train,
                 y_train,
-                epochs=1,
+                epochs=10,
                 batch_size=32,
                 validation_data=(x_test, y_test),
             )
-            _, test_acc = model.evaluate(x_test, y_test)
-            acc_list.append(test_acc)
-            print(f"测试准确率: {acc_list}")
-        TOTAL_TEST_ACC.append((num_hidden, acc_list[9]))
-        training_acc = history.history["accuracy"]
-        validation_acc = history.history["val_accuracy"]
+            # acc_list = [0 for i in range(10)]
+            acc_list = []
+            for i in range(10):
+                model.fit(
+                    x_train,
+                    y_train,
+                    epochs=1,
+                    batch_size=32,
+                    validation_data=(x_test, y_test),
+                )
+                _, test_acc = model.evaluate(x_test, y_test)
+                acc_list.append(test_acc)
+                print(f"测试准确率: {acc_list}")
+            TOTAL_TEST_ACC.append((num_hidden, acc_list[9]))
+            training_acc = history.history["accuracy"]
+            validation_acc = history.history["val_accuracy"]
 
-        y_pred_prob = model.predict(x_test)
-        y_pred = np.argmax(y_pred_prob, axis=1)
-        y_true = np.argmax(y_test, axis=1)
+            # write to file
+            with open("acc.txt", "a") as f:
+                f.write(
+                    f"size {kernel_size}, num_hidden {num_hidden}:\ntest_acc:{acc_list}\n, train_acc:{training_acc}\n, validate_acc:{validation_acc} "
+                )
+            y_pred_prob = model.predict(x_test)
+            y_pred = np.argmax(y_pred_prob, axis=1)
+            y_true = np.argmax(y_test, axis=1)
 
-        recall = recall_score(y_true, y_pred, average="macro")
-        # fpr, tpr, _ = roc_curve(y_test.ravel(), y_pred_prob.ravel())
-        # roc_auc = auc(fpr, tpr)
+            recall = recall_score(y_true, y_pred, average="macro")
+            with open("recall.txt", "a") as f:
+                f.write(
+                    f"kernel size: {kernel_size}, num_hidden:{num_hidden}召回率: {recall}"
+                )
+            # fpr, tpr, _ = roc_curve(y_test.ravel(), y_pred_prob.ravel())
+            # roc_auc = auc(fpr, tpr)
 
-        fpr = dict()
-        tpr = dict()
-        roc_auc = dict()
-        num_classes = y_train.shape[1]
-        for i in range(num_classes):
-            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_pred_prob[:, i])
-            roc_auc[i] = auc(fpr[i], tpr[i])
+            fpr = dict()
+            tpr = dict()
+            roc_auc = dict()
+            num_classes = y_train.shape[1]
+            for i in range(num_classes):
+                fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_pred_prob[:, i])
+                roc_auc[i] = auc(fpr[i], tpr[i])
 
-        plt.subplot(1, 2, 1)
-        plt.plot(training_acc, label="Training", linestyle="--", linewidth=3)
-        plt.plot(validation_acc, label="Validation", linewidth=3)
-        plt.plot(acc_list, label="Testing", linestyle="-", linewidth=3)
+            # plt.subplot(1, 2, 1)
+            plt.plot(training_acc, label="Training", linestyle="--", linewidth=3)
+            plt.plot(validation_acc, label="Validation", linewidth=3)
+            plt.plot(acc_list, label="Testing", linestyle=":", linewidth=3)
 
-        plt.title(
-            "Accuracy for " + str(num_hidden) + " hidden neurons, kernel size 4",
-            fontsize=14,
-        )
-        plt.xlabel("Epoch", fontsize=14)
-        plt.ylabel("Accuracy", fontsize=14)
-        plt.xticks(fontsize=12)
-        plt.yticks(fontsize=12)
-        plt.legend(loc="lower right", fontsize=12)
-
-        plt.subplot(1, 2, 2)
-        # 预测概率
-        y_score = model.predict(x_test)
-
-        # 计算ROC曲线和AUC值
-        fpr = dict()
-        tpr = dict()
-        roc_auc = dict()
-        for i in range(num_classes):
-            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
-            roc_auc[i] = auc(fpr[i], tpr[i])
-
-        # 绘制ROC曲线
-        # plt.figure()
-        colors = [
-            "aqua",
-            "darkorange",
-            "cornflowerblue",
-            "green",
-            "red",
-            "purple",
-            "pink",
-            "gray",
-            "brown",
-            "olive",
-        ]
-        for i, color in zip(range(num_classes), colors):
-            plt.plot(
-                fpr[i],
-                tpr[i],
-                color=color,
-                lw=2,
-                label="ROC curve of class {0} (area = {1:0.2f})".format(i, roc_auc[i]),
+            plt.title(
+                "Accuracy for "
+                + str(num_hidden)
+                + f" hidden neurons, kernel size {kernel_size}",
+                fontsize=14,
             )
-        plt.plot([0, 1], [0, 1], "k--", lw=2)
-        plt.xlim([0.0, 1.0])
-        plt.ylim([0.0, 1.05])
-        plt.xlabel("False Positive Rate")
-        plt.ylabel("True Positive Rate")
-        plt.title(
-            "Receiver operating characteristic for multi-class, 32 hidden layers "
-        )
-        plt.legend(loc="lower right")
-        plt.show()
+            plt.xlabel("Epoch", fontsize=14)
+            plt.ylabel("Accuracy", fontsize=14)
+            plt.xticks(fontsize=12)
+            plt.yticks(fontsize=12)
+            plt.legend(loc="lower right", fontsize=12)
+            plt.show()
+            # plt.subplot(1, 2, 2)
+            # # 预测概率
+            # y_score = model.predict(x_test)
+
+            # # 计算ROC曲线和AUC值
+            # fpr = dict()
+            # tpr = dict()
+            # roc_auc = dict()
+            # for i in range(num_classes):
+            #     fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+            #     roc_auc[i] = auc(fpr[i], tpr[i])
+
+            # # 绘制ROC曲线
+            # # plt.figure()
+            # colors = [
+            #     "aqua",
+            #     "darkorange",
+            #     "cornflowerblue",
+            #     "green",
+            #     "red",
+            #     "purple",
+            #     "pink",
+            #     "gray",
+            #     "brown",
+            #     "olive",
+            # ]
+            # for i, color in zip(range(num_classes), colors):
+            #     plt.plot(
+            #         fpr[i],
+            #         tpr[i],
+            #         color=color,
+            #         lw=2,
+            #         label="ROC curve of class {0} (area = {1:0.2f})".format(
+            #             i, roc_auc[i]
+            #         ),
+            #     )
+            # plt.plot([0, 1], [0, 1], "k--", lw=2)
+            # plt.xlim([0.0, 1.0])
+            # plt.ylim([0.0, 1.05])
+            # plt.xlabel("False Positive Rate")
+            # plt.ylabel("True Positive Rate")
+            # plt.title(
+            #     f"Receiver operating characteristic for multi-class, {num_hidden} hidden layers, kernel size {kernel_size}"
+            # )
+            # plt.legend(loc="lower right")
+            # plt.show()
 
 
 def draw_test_acc():
-    import seaborn as sns
     import matplotlib.pyplot as plt
     import panda as pd
+    import seaborn as sns
 
     data = TOTAL_TEST_ACC
 
