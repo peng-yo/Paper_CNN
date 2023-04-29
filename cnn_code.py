@@ -205,8 +205,8 @@ def draw_test_acc():
     # kernel_5 = [0.9934, 0.9919, 0.9942, 0.9922]
     # # 将元组列表转换为 DataFrame
     x = np.array([16, 32, 64, 128])
-    y1 = np.array([0.9914000034332275, 0.9915, 0.9921, 0.9916])
-    y2 = np.array([0.9934, 0.9919, 0.9942, 0.9922])
+    y1 = np.array([0.9922, 0.9928, 0.9929, 0.993])
+    y2 = np.array([0.9943, 0.9944, 0.9942, 0.9935])
     data = np.stack((y1, y2), axis=1)
     df = pd.DataFrame(data, columns=["Kernel size 3", "Kernel size 5"])
     df["Number of Hidden Layers"] = x
