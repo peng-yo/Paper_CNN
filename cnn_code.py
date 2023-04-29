@@ -69,23 +69,23 @@ def draw_each():
     sns.set_style("whitegrid")
     sns.set_palette("dark")
 
-    num_hidden_list = [16, 32, 64, 128]
+    num_hidden_list = [64, 128]
     # num_hidden_list = [64, 128]
-    for kernel_size in [3, 5]:
+    for kernel_size in [5]:
         for num_hidden in num_hidden_list:
             print("Number of hidden neurons:", num_hidden)
             model = cnn_model(num_hidden, kernel_size)
             model.compile(
                 loss=keras.losses.categorical_crossentropy,
                 # optimizer=keras.optimizers.legacy.Adadelta(),
-                optimizer=keras.optimizers.Adam(),
+                optimizer=keras.optimizers.legacy.Adam(),
                 metrics=["accuracy"],
             )
             history = model.fit(
                 x_train,
                 y_train,
                 epochs=10,
-                batch_size=32,
+                batch_size=64,
                 validation_data=(x_test, y_test),
             )
             # acc_list = [0 for i in range(10)]
@@ -95,7 +95,7 @@ def draw_each():
                     x_train,
                     y_train,
                     epochs=1,
-                    batch_size=32,
+                    batch_size=64,
                     validation_data=(x_test, y_test),
                 )
                 _, test_acc = model.evaluate(x_test, y_test)
@@ -197,21 +197,31 @@ def draw_each():
 
 def draw_test_acc():
     import matplotlib.pyplot as plt
-    import panda as pd
+    import numpy as np
+    import pandas as pd
     import seaborn as sns
 
-    data = TOTAL_TEST_ACC
+    # kernel_3 = [0.9914000034332275, 0.9915, 0.9921, 0.9916]
+    # kernel_5 = [0.9934, 0.9919, 0.9942, 0.9922]
+    # # 将元组列表转换为 DataFrame
+    x = np.array([16, 32, 64, 128])
+    y1 = np.array([0.9914000034332275, 0.9915, 0.9921, 0.9916])
+    y2 = np.array([0.9934, 0.9919, 0.9942, 0.9922])
+    data = np.stack((y1, y2), axis=1)
+    df = pd.DataFrame(data, columns=["Kernel size 3", "Kernel size 5"])
+    df["Number of Hidden Layers"] = x
+    df = df.melt(
+        "Number of Hidden Layers", var_name="Kernel size", value_name="Accuracy"
+    )
 
-    # 将元组列表转换为 DataFrame
-    df = pd.DataFrame(data, columns=["num_hidden", "test_acc"])
-
-    # 绘制条形图
-    sns.barplot(x="num_hidden", y="test_acc", data=df)
-
-    # 显示图形
+    sns.lineplot(x="Number of Hidden Layers", y="Accuracy", hue="Kernel size", data=df)
+    plt.title("Comparison of Kernel Size 3 and Kernel Size 5")
+    plt.xlabel("Number of Hidden Layers")
+    plt.ylabel("Accuracy")
+    plt.legend()
     plt.show()
 
 
 if __name__ == "__main__":
-    draw_each()
+    # draw_each()
     draw_test_acc()
