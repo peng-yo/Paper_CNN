@@ -1,0 +1,54 @@
+* Week1
+
+  - 开始查阅资料，了解手写数字识别是什么？需要用到那些技术和方法？
+  - 了解到手写数字识别是深度学习领域的知识
+
+* Week2
+  - 收集和整理了一些资料，开始阅读
+  - 阅读书籍《Deep Learning (The MIT Press Essential Knowledge series)》
+
+   
+* Week3
+  - 这周继续看书，了解基本的机器学习和深度学习的算法
+  - 阅读书籍《Deep Learning with Python, Second Edition》，了解怎么用Python实现手写数字识别
+
+    
+* Week4
+  - 阅读书籍和资料
+  - 在B站上面学习深度学习和手写数字识别相关的知识
+    
+* Week5
+  - 根据网上的教程和Tensorflow官网上面的教程，开始动手写代码
+  - 在本地机器上配置深度学习环境，安装Tensorflow和Jupyter等
+
+* Week6
+  - 代码运行和调试成功
+  - 开始查找论文方面的资料，主要在知网和谷歌学术里面查找
+
+* Week7
+  - 开始阅读论文Recognition of Handwritten Digit using  Convolutional Neural Network in Python with  Tensorflow and Comparison of Performance for  Various Hidden Layers  和 "Gradientbased learning applied to document recognition"等论文
+
+    
+* Week8
+  - 继续阅读论文并且学习梯度下降，python绘图，反向传播等知识
+
+* Week9 
+  - 写代码，完成Python绘制手写数字识别的测试准确率，验证准确率以及训练准确率的对比图像。
+  - 绘制ROC曲线图，以及回归率的测试
+
+* Week10
+  - 开始撰写论文，完成论文的摘要、引言部分
+    
+* Week11
+  - 继续撰写论文，查阅资料
+    
+* WEEK12
+  - 查阅资料，完成论文相关工作部分
+  - 包括对KNN,SVM,CNN的研究
+
+* Week13
+  - 查阅资料，完成论文实验方法与结果分析部分
+  - 修改论文，从内容上和结构上，仔细修改论文、润色    
+
+
+
